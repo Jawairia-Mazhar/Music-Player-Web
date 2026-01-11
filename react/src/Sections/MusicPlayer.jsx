@@ -9,34 +9,34 @@ import Audio from "../assets/sample-audio.mp3";
 import PauseBtn from '../assets/pause.png';
 
 const MusicPlayer = () => {
-    const [progress, setProgress] = React.useState(0);
-    const audioRef = React.useRef(null);
-    const [isPlaying, setIsPlaying] = React.useState(false);
+    const [progress, setProgress] = React.useState(0); //to track progress
+    const audioRef = React.useRef(null); // referring to audio element -useRef hook
+    const [isPlaying, setIsPlaying] = React.useState(false); //for play/pause state
 
-    React.useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
+    React.useEffect(() => { // to update progress bar as audio plays
+        const audio = audioRef.current; // get audio element .current is used to access the DOM element
+        if (!audio) return; // safety check
 
-        const updateProgress = () => {
-              if (!audio.duration) { setProgress(0); return; }
+        const updateProgress = () => { // function to update progress state
+              if (!audio.duration) { setProgress(0); return; } // handle case where duration is not available
             const percent = 
-            (audio.currentTime / audio.duration) * 100 || 0;
-            setProgress(percent);
+            (audio.currentTime / audio.duration) * 100 || 0; // calculate percentage to update progress bar
+            setProgress(percent); // update state with calculated percentage
         }
 
-        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('timeupdate', updateProgress); // listen for timeupdate event to update progress
 
-        return () => {
+        return () => { // cleanup function to remove event listener. why? to prevent memory leaks
             audio.removeEventListener('timeupdate', updateProgress);
         };
     }, []);
     
-    const togglePlay = () => {
+    const togglePlay = () => { // function to handle play/pause toggle
         const audio = audioRef.current;
         if(!audio) return;
 
         if(isPlaying){
-            audio.pause();
+            audio.pause(); // pause audio if currently playing
             setIsPlaying(false);
         } else {
             audio.play();
@@ -44,11 +44,11 @@ const MusicPlayer = () => {
         }
     }
 
-    React.useEffect(() => {
-        const audio = audioRef.current;
+    React.useEffect(() => { // to handle audio end event
+        const audio = audioRef.current; 
         if (!audio) return;
 
-        const onEnded = () => setIsPlaying(false);
+        const onEnded = () => setIsPlaying(false);  // reset play state when audio ends
         audio.addEventListener("ended", onEnded);
 
         return () => {
@@ -84,16 +84,16 @@ const MusicPlayer = () => {
         </div>
 
         <div>
-            <input type="range" 
-            min="0" 
+            <input type="range" // progress bar 
+            min="0" //minimum value
             max="100" 
-            value={progress} 
+            value={progress} //progress state which updates as audio plays
             onChange={(e) => {
                 const audio = audioRef.current;
                 const newTime =
                 (e.target.value / 100) * audio.duration;
                 audio.currentTime = newTime;
-            setProgress(e.target.value);
+            setProgress(e.target.value); // update progress state when user interacts with the slider
             }}        
             className='w-48 accent-black'
             />
@@ -108,7 +108,7 @@ const MusicPlayer = () => {
         <img src={fullscreen} alt="full screen icon" className='w-4 h-4 inline cursor-pointer'/>
     </div>
 
-    <audio ref={audioRef} src={Audio}></audio>
+    <audio ref={audioRef} src={Audio}></audio> {/* audio element to play the music */}
     </footer>
   )
 }
