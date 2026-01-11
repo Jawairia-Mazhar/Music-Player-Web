@@ -69,8 +69,8 @@ const MusicPlayer = () => {
     </div>
 
     <div className='items-center'>
-        <div className='flex gap-8 p-3 items-center'>
-        <img src={BackBtn} alt="" className='w-5 h-5'/>
+        <div className='flex justify-between p-3 items-center'>
+            <img src={BackBtn} alt="" className='w-5 h-5'/>
 {/* play button */}
         <div className='bg-amber-300 w-9 h-9 justify-center items-center flex rounded-full'
         onClick={togglePlay}>
